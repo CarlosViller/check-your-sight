@@ -26,7 +26,7 @@ export default function App() {
 
   const [state, dispatch] = useReducer(reducer, {
     status: READY,
-    points: 0
+    points: 0,
   })
 
   return (
@@ -35,6 +35,8 @@ export default function App() {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
       </Head>
       <div
         css={{
@@ -46,7 +48,7 @@ export default function App() {
       >
         <Screen
           dispatch={dispatch}
-          state={state}
+          gameState={state}
         />
         <div
           css={{
