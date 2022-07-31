@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import newColors from "../colors";
 import { ENDED } from "../constants";
 
@@ -18,6 +18,22 @@ function useOutsideHandler(ref, screenRef, handler) {
   }, [ref]);
 }
 
+function useCoords(screenRef){
+  const [state, setState] = useState({
+    x: randomMove(screenRef.current?.offsetWidth),
+    y: randomMove(screenRef.current?.offsetHeight)
+  })
+
+   function changeCoords(){
+     setState({
+      x: randomMove(screenRef.current?.offsetWidth),
+      y: randomMove(screenRef.current?.offsetHeight)
+    })
+   }
+
+   return [state, changeCoords]
+}
+
 export default function MovingColor({
   status,
   winnerColor,
@@ -31,6 +47,8 @@ export default function MovingColor({
   const ref = useRef(null);
   useOutsideHandler(ref, screenRef, lose);
 
+  const [coords, changeCoords] = useCoords(screenRef)
+
   return (
     <button
       ref={ref}
@@ -41,14 +59,15 @@ export default function MovingColor({
         background: `${winnerColor}`,
         border: status === ENDED ? "1px solid white" : "unset",
         position: "absolute",
-        top: randomMove(screenRef.current?.offsetHeight),
-        left: randomMove(screenRef.current?.offsetWidth)
+        left: coords.x,
+        top: coords.y
 
       }}
       onClick={() => {
         if(status < ENDED)
         addPoint()
         setColors(newColors(spread))
+        changeCoords()
       }}
     >
     </button>
