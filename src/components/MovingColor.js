@@ -1,13 +1,17 @@
 import { useRef, useEffect, useState } from "react";
 import newColors from "../colors";
-import { ENDED } from "../constants";
+import { ENDED, STARTED } from "../constants";
 
 const BASE_SIZE = 20
 
-function useOutsideHandler(ref, screenRef, handler) {
+function useOutsideHandler(ref, screenRef, handler, status) {
   useEffect(() => {
     function handleClickOutside(event) {
-      if (ref.current && !ref.current.contains(event.target) && screenRef.current.contains(event.target)) {
+      if (
+        status === STARTED &&
+        ref.current &&
+        !ref.current.contains(event.target) &&
+        screenRef.current.contains(event.target)) {
         handler()
       }
     }
@@ -18,20 +22,20 @@ function useOutsideHandler(ref, screenRef, handler) {
   }, [ref]);
 }
 
-function useCoords(screenRef){
+function useCoords(screenRef) {
   const [state, setState] = useState({
     x: randomMove(screenRef.current?.offsetWidth),
     y: randomMove(screenRef.current?.offsetHeight)
   })
 
-   function changeCoords(){
-     setState({
+  function changeCoords() {
+    setState({
       x: randomMove(screenRef.current?.offsetWidth),
       y: randomMove(screenRef.current?.offsetHeight)
     })
-   }
+  }
 
-   return [state, changeCoords]
+  return [state, changeCoords]
 }
 
 export default function MovingColor({
@@ -45,7 +49,7 @@ export default function MovingColor({
 }) {
 
   const ref = useRef(null);
-  useOutsideHandler(ref, screenRef, lose);
+  useOutsideHandler(ref, screenRef, lose, status);
 
   const [coords, changeCoords] = useCoords(screenRef)
 
@@ -64,10 +68,11 @@ export default function MovingColor({
 
       }}
       onClick={() => {
-        if(status < ENDED)
-        addPoint()
-        setColors(newColors(spread))
-        changeCoords()
+        if (status === STARTED) {
+          addPoint()
+          setColors(newColors(spread))
+          changeCoords()
+        }
       }}
     >
     </button>
