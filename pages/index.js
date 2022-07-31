@@ -25,7 +25,7 @@ function reducer(state, action) {
   }
 }
 
-export default function Home() {
+export default function App() {
 
   const [state, dispatch] = useReducer(reducer, {
     status: READY,
@@ -45,6 +45,7 @@ export default function Home() {
       <Screen
         addPoint={() => dispatch({ type: POINT })}
         lose={() => dispatch({ type: FAILED })}
+        state={state}
       />
       <div
         css={{
