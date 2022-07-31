@@ -48,7 +48,7 @@ export default function App() {
       >
         <Screen
           dispatch={dispatch}
-          gameState={state}
+          state={state}
         />
         <div
           css={{
