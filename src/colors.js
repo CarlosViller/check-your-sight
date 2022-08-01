@@ -7,9 +7,9 @@ export default function newColors(spread) {
 }
 
 function getRandomColors(spread) {
-  const MIN_SPREAD = 20
+  const MIN_SPREAD = 2
 
-  const r = (factor = 256) => Math.random() * factor >> 0
+  const r = (factor = 256) => (Math.random() * factor) >> 0
 
   const sign = Math.round(Math.random()) === 1 ? 1 : -1
   const red = r()
@@ -18,11 +18,11 @@ function getRandomColors(spread) {
 
   const bkg = `rgb(${red}, ${green}, ${blue})`
 
-  const wRed = red + MIN_SPREAD + sign * r(spread)
-  const wGreen = green + MIN_SPREAD + sign * r(spread)
-  const wBlue = blue + MIN_SPREAD + sign * r(spread)
+  const wRed = red + MIN_SPREAD + (sign * spread)
+  const wGreen = green + MIN_SPREAD + (sign * spread)
+  const wBlue = blue + MIN_SPREAD + (sign * spread)
 
-  const winner = `rgb(${wRed > 255 ? 255 : wRed}, ${wGreen > 255 ? 255 : wBlue}, ${wBlue > 255 ? 255 : wBlue})`
+  const winner = `rgb(${wRed > 255 ? 255 : wRed}, ${wGreen > 255 ? 255 : wGreen}, ${wBlue > 255 ? 255 : wBlue})`
 
   return [bkg, winner]
 }

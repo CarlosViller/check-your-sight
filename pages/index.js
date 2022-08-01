@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useReducer } from "react";
 import Screen from "../src/components/Screen";
 import { READY, STARTED, ENDED, START, POINT, FAILED, LV } from "../src/constants";
 import Button from "../src/components/interface/Button";
 import Head from "next/head";
+import { NAME } from "../src/constants";
 
 const CHANGE_FACTOR = 5
 const MAX_COLORS_INDEX = LV.length - 1
@@ -28,37 +29,28 @@ export default function App() {
     status: READY,
     points: 0,
   })
+  const spread = useMemo(() => {
+
+  }, [state.points])
 
   return (
     <>
       <Head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
         <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
         <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
         <link rel="icon" href="/favicon.ico" type="image/x-icon" />
       </Head>
       <div
         css={{
-          position: "relative",
           height: "calc(100vh - 40px)",
           margin: 20,
           borderRadius: 10,
         }}
       >
-        <Screen
-          dispatch={dispatch}
-          state={state}
-        />
-        <div
-          css={{
-            width: "100%",
-            height: 125,
-            position: "absolute",
-            bottom: 0,
-            borderRadius: "0 0 5px 5px",
-          }}
-        >
+        <Screen dispatch={dispatch} state={state} spread={spread} />
+        <div css={{ width: "100%", height: 100, }}>
           <div
             css={{
               fontFamily: '"Press Start 2P", cursive',
@@ -72,10 +64,7 @@ export default function App() {
           >
             {state.status !== ENDED
               ? (
-                <span css={{
-                  fontSize: 64,
-                  color: selectColor(state.points)
-                }}>
+                <span css={{ fontSize: 64, color: selectColor(state.points) }}>
                   {state.points}
                 </span>
               )
@@ -87,10 +76,36 @@ export default function App() {
             }
           </div>
         </div>
+        <div css={{ height: 25, display: "flex", justifyContent: "flex-end" }}>
+          <a
+            href="https://github.com/CarlosViller"
+            css={{
+              display: "flex",
+              alignItems: "center",
+              height: "max-content",
+              '&:hover': {
+                color: randomHoverColor()
+              }
+            }}
+          >
+            <span css={{
+              marginRight: 8,
+              '&:hover': {
+                color: "inherit"
+              }
+            }}
+            >
+              By Deltaaaaq
+            </span>
+            <img src="/icons/github.svg" />
+          </a>
+        </div>
       </div>
     </>
   )
 }
+
+const randomHoverColor = () => NAME[Math.floor(Math.random() * NAME.length)]
 
 function selectColor(points) {
   const index = Math.floor(points / CHANGE_FACTOR)

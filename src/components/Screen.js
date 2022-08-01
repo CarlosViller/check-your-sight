@@ -4,22 +4,23 @@ import { ENDED, STARTED, POINT, FAILED } from "../constants";
 
 const BASE_SIZE = 20
 
-function useOutsideHandler(ref, screenRef, status, handler) {
+function useOutsideHandler(blockRef, screenRef, status, handler) {
   useEffect(() => {
     function handleClickOutside(event) {
       if (
         status === STARTED &&
-        ref.current &&
-        !ref.current.contains(event.target) &&
+        blockRef.current &&
+        !blockRef.current.contains(event.target) &&
         screenRef.current.contains(event.target)) {
         handler()
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
+    
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [ref, screenRef]);
+  }, [blockRef.current, screenRef.current]);
 }
 
 function useCoords(screenRef) {
@@ -38,15 +39,14 @@ function useCoords(screenRef) {
   return [state, changeCoords]
 }
 
-export default function Screen({ dispatch, state, spread = 10 }) {
+export default function Screen({ dispatch, state, spread = 0 }) {
+
+  const screenRef = useRef(null)
+  const blockRef = useRef(null);
+  useOutsideHandler(blockRef, screenRef, state.status, () => dispatch({ type: FAILED }));
 
   // Format: { bkg: rgbColor <string>, winner: rgbColor <string> }
   const [colors, setColors] = useState(newColors(spread))
-  const screenRef = useRef(null)
-
-  const blockRef = useRef(null);
-  useOutsideHandler(blockRef, screenRef, state.status, () => dispatch({type: FAILED}));
-
   const [coords, changeCoords] = useCoords(screenRef)
 
   return (
