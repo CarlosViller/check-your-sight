@@ -1,13 +1,5 @@
 export default function newColors(spread) {
-  const [bkg, winner] = getRandomColors(spread)
-  return {
-    bkg,
-    winner
-  }
-}
-
-function getRandomColors(spread) {
-  const MIN_SPREAD = 2
+  const MIN_SPREAD = 7
 
   const r = (factor = 256) => (Math.random() * factor) >> 0
 
@@ -18,11 +10,17 @@ function getRandomColors(spread) {
 
   const bkg = `rgb(${red}, ${green}, ${blue})`
 
-  const wRed = red + MIN_SPREAD + (sign * spread)
-  const wGreen = green + MIN_SPREAD + (sign * spread)
-  const wBlue = blue + MIN_SPREAD + (sign * spread)
+  const wRed = red + (MIN_SPREAD + spread) * sign
+  const wGreen = green + (MIN_SPREAD + spread) * sign
+  const wBlue = blue + (MIN_SPREAD + spread) * sign
 
-  const winner = `rgb(${wRed > 255 ? 255 : wRed}, ${wGreen > 255 ? 255 : wGreen}, ${wBlue > 255 ? 255 : wBlue})`
+  const winner = `rgb(${colorCorrection(wRed)}, ${colorCorrection(wGreen)}, ${colorCorrection(wBlue)})`
 
-  return [bkg, winner]
+  return { bkg, winner }
+}
+
+function colorCorrection(color) {
+  if(color < 0) return 0
+  if(color > 255) return 255
+  return color
 }

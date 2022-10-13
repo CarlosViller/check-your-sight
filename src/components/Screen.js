@@ -39,16 +39,16 @@ function useCoords(screenRef) {
   return [state, changeCoords]
 }
 
-export default function Screen({ dispatch, state, spread = 0 }) {
+export default function Screen({ dispatch, state }) {
 
   const screenRef = useRef(null)
   const blockRef = useRef(null);
   useOutsideHandler(blockRef, screenRef, state.status, () => dispatch({ type: FAILED }));
 
   // Format: { bkg: rgbColor <string>, winner: rgbColor <string> }
-  const [colors, setColors] = useState(newColors(spread))
+  const [colors, setColors] = useState(newColors(state.spread))
   const [coords, changeCoords] = useCoords(screenRef)
-
+  console.log(colors, state.spread)
   return (
     <div
       ref={screenRef}
@@ -76,7 +76,7 @@ export default function Screen({ dispatch, state, spread = 0 }) {
         onClick={() => {
           if (state.status !== ENDED) {
             dispatch({ type: POINT })
-            setColors(newColors(spread))
+            setColors(newColors(state.spread))
             changeCoords()
           }
         }}

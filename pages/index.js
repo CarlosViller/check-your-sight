@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { useReducer } from "react";
 import Screen from "../src/components/Screen";
 import { READY, STARTED, ENDED, START, POINT, FAILED, LV } from "../src/constants";
@@ -8,13 +8,19 @@ import { NAME } from "../src/constants";
 
 const CHANGE_FACTOR = 5
 const MAX_COLORS_INDEX = LV.length - 1
+const DECREASING_FACTOR = 3
+const INITIAL_SPREAD = 50
 
 function reducer(state, action) {
   switch (action.type) {
     case START:
-      return { status: STARTED, points: 0 }
+      return { status: STARTED, points: 0, spread: INITIAL_SPREAD }
     case POINT:
-      return { status: STARTED, points: state.points + 1 }
+      return {
+        status: STARTED,
+        points: state.points + 1, 
+        spread: state.spread >= DECREASING_FACTOR ?  state.spread - DECREASING_FACTOR : 0
+      }
     case FAILED:
       return { ...state, status: ENDED }
 
@@ -28,10 +34,8 @@ export default function App() {
   const [state, dispatch] = useReducer(reducer, {
     status: READY,
     points: 0,
+    spread: INITIAL_SPREAD
   })
-  const spread = useMemo(() => {
-
-  }, [state.points])
 
   return (
     <>
@@ -49,7 +53,7 @@ export default function App() {
           borderRadius: 10,
         }}
       >
-        <Screen dispatch={dispatch} state={state} spread={spread} />
+        <Screen dispatch={dispatch} state={state} />
         <div css={{ width: "100%", height: 100, }}>
           <div
             css={{
